@@ -1,0 +1,118 @@
+{% extends "base.html" %} {% block content %}
+<div class="main">
+    <section class="module-small">
+        <div class="container">
+            <h1>プロジェクトの評価</h1>
+            <div class="row">
+                <div class="center">
+                    <select name="sources" id="sources" class="custom-select sources" placeholder="Source Type">
+                      <option value="profile">Profile</option>
+                      <option value="word">Word</option>
+                      <option value="hashtag">Hashtag</option>
+                    </select>
+                </div>
+                {% for i in lists %}
+                <div class="col-sm-3">
+                    {% if not i.image %}
+                    <img src="static/planning_image/nc33060.png" alt="説明書き" width="150" height="150" class="img-fluid img_list"></a>
+                    {% else %}
+                    <img src="static/planning_image/{{i.id}}/{{i.image}}" alt="説明書き"></a>
+                    {% endif %}
+                </div>
+                <div class="col-sm-5">
+                    <h2>企画名：{{i.title}}</h2>
+                    <h3>概要：{{i.contents}}</h3>
+                </div>
+                {% endfor %}
+            </div>
+            <h1 class="comment-form-title font-alt">全体の評価</h1>
+            <form method="post" action="/practic_end?ID=1">
+                <textarea class="form-control" id="comment" name="comment" rows="8" placeholder="プロジェクト全体を通しての感想を記入してください。"></textarea>
+                <h1 class="comment-form-title font-alt">メンバー各々の評価</h1>
+
+                {% for i in menber%}
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h2>{{i.username}}</h2>
+                    </div>
+                    <select class="form-select mb-3 pull-right" id="point_{{i.menber_id}}" aria-label=".form-select-lg example" name="number">
+                    <option selected>評価</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  
+                </div>
+                <h3>コメント</h3>
+                <div class="form-group">
+                    <input type="hidden" name="ID" value="{{i.menber_id}}">
+                    <textarea class="form-control" name={{i.menber_id}} rows="4" placeholder="Comment"></textarea> {% endfor %}
+                    <button class="btn btn-round btn-d" type="submit">書き込む</button>
+                </div>
+            </select>
+
+            </form>
+
+            <div class="box25">
+                <div class="row" style="margin-bottom: -3px;">
+                    <div class="col-sm-1">
+                        {%if not picture_path %}
+                        <img class="user_icon" src="static/planning_image/nc33060.png"></a>
+                        {%else%}
+                        <img class="user_icon" src="static/user_image/{{current_user.id}}/{{picture_path}}"></a>
+                        {%endif%}
+                    </div>
+                    <font size="5">{{current_user.username}}</font>
+                </div>
+                <hr class="cp_hr03" style="margin-top: -3px;" />
+                <font size="2" style="padding-left: 100px;">コメント</font>
+            </div>
+            <h1 class="comment-form-title font-alt">メンバー各々の評価</h1>
+
+            {% for i in range(5)%}
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>{{i}}</h2>
+                </div>
+                <select class="form-select mb-3 pull-right" id="point_{{i}}" aria-label=".form-select-lg example">
+                <option selected>評価</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <h3>コメント</h3>
+            <form method="post" action="/練習_s">
+                <div class="form-group">
+                    <input type="hidden" name="ID" value="{{i}}">
+                    <textarea class="form-control" name={{i}} rows="4" placeholder="Comment"></textarea> {% endfor %}
+                    <button class="btn btn-round btn-d" type="submit">書き込む</button>
+            </form>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>3</h2>
+                </div>
+                <select class="form-select mb-3 pull-right" id="point_{{i}}" aria-label=".form-select-lg example">
+                <option selected>評価</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <h3>コメント</h3>
+            <form method="post" action="/練習_s">
+                <div class="form-group">
+                    <input type="hidden" name="ID" value="3">
+                    <textarea class="form-control" name="3" rows="4" placeholder="Comment"></textarea>
+                    <button class="btn btn-round btn-d" type="submit">書き込む</button>
+            </form>
+
+
+    </section>
+    </div>
+    {% endblock %}

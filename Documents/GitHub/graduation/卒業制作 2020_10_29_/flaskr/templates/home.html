@@ -1,0 +1,226 @@
+{% extends "base.html" %} {% block content %}
+<!--↓企画一覧-->
+<section class="module">
+    <div class=".container-fluid" style="margin-left: 3%;">
+        <div class="row">
+            <h2 class="widget-title font-alt">募集中の企画</h2>
+            <div class="col-sm-8">
+                <div class="row row-eq-height">
+                    {% for i in lists %}
+                    <div class="col-md-4 col-lg-4">
+                        <div class="GET">
+                            <div class="post-thumbnail">
+                                {% if not i.image %}
+                                <a href="/details?ID={{i.id}}"><img src="static/planning_image/nc33060.png" alt="説明書き" width="800" height="460" class="img-fluid img_list"></a>
+                                {% else %}
+                                <a href="/details?ID={{i.id}}"><img src="static/planning_image/{{i.id}}/{{i.image}}" alt="説明書き" width="800" height="460" class="img-fluid img_list"></a>
+                                {% endif %}
+                            </div>
+                            <div class="post-header font-alt">
+                                {% if i.title | length >= 30 %}
+                                <h2 class="post-title"><a href="/details?ID={{i.id}}">{{i.title[:30]}}...</a></h2>
+                                {% else %}
+                                <h2 class="post-title"><a href="/details?ID={{i.id}}">{{i.title}}</a></h2>
+                                {% endif %}
+                                <div class="post-meta">&nbsp;<a href="#">{{i.username}}</a>&nbsp;{{i.create_at}}
+                                </div>
+                            </div>
+                            <div class="post-entry">
+                                {% if i.contents | length >= 50 %}
+                                <p>{{i.contents[:50]}}...</p>
+                                {% else %}
+                                <p>{{i.contents}}</p>
+                                {% endif %}
+                            </div>
+                            <div class="post-more"><a class="more-link" href="/details?ID={{i.id}}">Read more</a></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <h2 class="widget-title font-alt col-sm-9">完成した企画</h2>
+                    {% if not end_lists%}
+                    <div class="col-md-4 col-lg-4">
+                        <h3>現在まだ企画有りません</h3>
+                    </div>
+                    {% else %} {% for i in end_lists %}
+                    <div class="col-md-4 col-lg-4">
+                        <div class="GET">
+                            <div class="post-thumbnail">
+                                {% if not i.image %}
+                                <a href="/details?ID={{i.id}}"><img src="static/planning_image/nc33060.png" alt="説明書き" width="800" height="460" class="img-fluid img_list"></a>
+                                {% else %}
+                                <a href="/details?ID={{i.id}}"><img src="static/planning_image/{{i.id}}/{{i.image}}" alt="説明書き" width="800" height="460" class="img-fluid img_list"></a>
+                                {% endif %}
+                            </div>
+                            <div class="post-header font-alt">
+                                {% if i.title | length >= 30 %}
+                                <h2 class="post-title"><a href="/details?ID={{i.id}}">{{i.title[:30]}}...</a></h2>
+                                {% else %}
+                                <h2 class="post-title"><a href="/details?ID={{i.id}}">{{i.title}}</a></h2>
+                                {% endif %}
+                                <div class="post-meta">&nbsp;<a href="#">{{i.username}}</a>&nbsp;{{i.create_at}}
+                                </div>
+                            </div>
+                            <div class="post-entry">
+                                {% if i.contents | length >= 50 %}
+                                <p>{{i.contents[:50]}}...</p>
+                                {% else %}
+                                <p>{{i.contents}}</p>
+                                {% endif %}
+                            </div>
+                            <div class="post-more"><a class="more-link" href="/details?ID={{i.id}}">Read more</a></div>
+                        </div>
+                    </div>
+                    {% endfor %} {% endif %}
+                </div>
+                <div class="pagination font-alt"><a href="#"><i class="fa fa-angle-left"></i></a><a class="active" href="#">1</a><a href="#">2</a><a href="#">3</a><a href="#">4</a><a href="#"><i class="fa fa-angle-right"></i></a></div>
+            </div>
+            <div class="col-sm-4 col-md-3 col-md-offset-1 sidebar">
+
+                <!--右下のボタン-->
+                <div id="fixed">
+                    <a href="{{url_for('app.forms')}}" class="btn btn-malformation">企画する</a>
+                </div>
+                <!--検索ボックス-->
+                <div class="widget">
+                    <form role="form" action="/search" method="GET">
+                        <div class="search-box">
+                            <input class="form-control" type="text" placeholder="検索" name="tags" />
+                            <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="widget">
+                    <h5 class="widget-title font-alt">学科カテゴリー</h5>
+                    <ul class="icon-list">
+                        <ul class="list-group-flush" style="max-width: 270px;"></ul>
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#creator">クリエイターズカレッジ</a>
+                                    </h4>
+                                </div>
+                                <div id="creator" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for i in course_cr %}
+                                            <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#design">デザインカレッジ</a>
+                                    </h4>
+                                </div>
+                                <div id="design" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for i in course_ds %}
+                                            <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#music">ミュージックカレッジ</a>
+                                    </h4>
+                                </div>
+                                <div id="music" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for i in course_mu %}
+                                            <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#it">ITカレッジ</a>
+                                    </h4>
+                                </div>
+                                <div id="it" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for i in course_it %}
+                                            <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#technology">テクノロジーカレッジ</a>
+                                    </h4>
+                                </div>
+                                <div id="technology" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for i in course_tc %}
+                                            <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                    </ul>
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget-title font-alt">Popular Posts</h5>
+                        <ul class="widget-posts">
+                            <li class="clearfix">
+                                <div class="widget-posts-image">
+                                    <a href="#"><img src="assets/images/rp-3.jpg" alt="Post Thumbnail" /></a>
+                                </div>
+                                <div class="widget-posts-body">
+                                    <div class="widget-posts-title"><a href="#">Designer Desk Essentials</a></div>
+                                    <div class="widget-posts-meta">23 january</div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="widget-posts-image">
+                                    <a href="#"><img src="static/assets/images/rp-4.jpg" alt="Post Thumbnail" /></a>
+                                </div>
+                                <div class="widget-posts-body">
+                                    <div class="widget-posts-title"><a href="#">Realistic Business Card Mockup</a></div>
+                                    <div class="widget-posts-meta">15 February</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget-title font-alt">Tag</h5>
+                        <div class="tags font-serif">
+                            {% for i in tag %}
+                            <a href="/search?tags={{i}}">{{i}}</a> {% endfor %}
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget-title font-alt">Text</h5>The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators.
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget-title font-alt">Recent Comments</h5>
+                        <ul class="icon-list">
+                            <li>Maria on <a href="#">Designer Desk Essentials</a></li>
+                            <li>John on <a href="#">Realistic Business Card Mockup</a></li>
+                            <li>Andy on <a href="#">Eco bag Mockup</a></li>
+                            <li>Jack on <a href="#">Bottle Mockup</a></li>
+                            <li>Mark on <a href="#">Our trip to the Alps</a></li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+            </div>
+</section>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block content %}
+
+<section class="module">
+    <div class="container-fluid" style="margin-left: 3%;">
+        <h1 class="widget-title font-alt">自身が企画したプロフェクト</h1>
+        <dev class="row row-eq-height">
+            {% for i in lists %}
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                <div class="post">
+                    <div class="post-thumbnail">
+                        {% if not i.image %}
+                        <a href="/plan_chat?ID={{i.id}}"><img src="static/planning_image/nc33060.png" alt="説明書き" width="800" height="460" class="img-fluid img_list"></a>
+                        {% else %}
+                        <a href="/plan_chat?ID={{i.id}}"><img src="static/planning_image/{{i.id}}/{{i.image}}" alt="説明書き" width="800" height="460" class="img-fluid img_list"></a>
+                        {% endif %}
+                    </div>
+                    <div class="post-header font-alt">
+                        {% if i.title | length >= 30 %}
+                        <h2 class="post-title"><a href="/plan_chat?ID={{i.id}}">{{i.title[:30]}}...</a></h2>
+                        {% else %}
+                        <h2 class="post-title"><a href="/plan_chat?ID={{i.id}}">{{i.title}}</a></h2>
+                        {% endif %}
+                        <div class="post-meta">&nbsp;<a href="#">{{i.username}}</a>&nbsp;{{i.create_at}}
+                        </div>
+                    </div>
+                    <div class="post-entry">
+                        {% if i.contents | length >= 50 %}
+                        <p>{{i.contents[:50]}}...</p>
+                        {% else %}
+                        <p>{{i.contents}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="post-more"><a class="more-link" href="#">Read more</a></div>
+                </div>
+            </div>
+            {% endfor %}
+        </dev>
+    </div>
+    </div>
+</section>
+{% endblock %}

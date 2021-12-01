@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block content %}
+<div class="main">
+    <section class="module-small">
+        <div class="container">
+            <h4 class="font-alt">受信したメッセージ</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>プロジェクトタイトル</th>
+                        <th>送信者</th>
+                        <th>内容</th>
+                        <th>日付</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in message_list%}
+                    <tr data-href="/message_details?ID={{i.id}}">
+                        <td>{{i.title}}</td>
+                        <td>{{i.username}}</td>
+                        <td>{{i.message}}</td>
+                        <td>{{i.create_at}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+<script src="./jquery.min.js"></script>
+<script>
+    jQuery(function($) {
+        $('tbody tr[data-href]').addClass('clickable').click(function() {
+            window.location = $(this).attr('data-href');
+        }).find('a').hover(function() {
+            $(this).parents('tr').unbind('click');
+        }, function() {
+            $(this).parents('tr').click(function() {
+                window.location = $(this).attr('data-href');
+            });
+        });
+    });
+</script>
+{% endblock %}

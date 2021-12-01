@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% block content %}
+<section class="module">
+    <div class="container">
+        <div class="row">
+            <h3>企画評価</h3>
+            <hr class="cp_hr03" style="margin-top: -3px;" />
+            <div class="tape-box">
+                <div class="tape"></div>
+                <form method="post" action="/planning_evaluation">
+                    <input type="hidden" id="id" name="id" value={{id}}>
+                    <select class="form-select" aria-label=".form-select-lg example" name="planning_number">
+                <option selected>評価</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                </select>
+                    <h3>コメント</h3>
+                    <hr class="cp_hr03" style="margin-top: -3px;" />
+                    <textarea class="form-control" name="planning_comment" rows="5" placeholder="Comment"></textarea>
+            </div>
+            <!------------------------------------------------------------------------------------------>
+            {% if plan != current_user.id %}
+            <h3>企画者への評価</h3>
+            <hr class="cp_hr03" style="margin-top: -3px;" />
+            <div class="tape-box_r">
+                <div class="tape"></div>
+                <select class="form-select" aria-label=".form-select-lg example" name="planner_number">
+                    <option selected>評価</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    </select>
+                <h3>コメント</h3>
+                <hr class="cp_hr03" style="margin-top: -3px;" />
+                <textarea class="form-control" name="planner_comment" rows="5" placeholder="Comment"></textarea>
+            </div>{%endif%}
+            <!------------------------------------------------------------------------------------------>
+            {% if member_len >= 1%} {%for i in member%} {% if member_len == 1 and i.member_id == current%}
+            <p></p> {%else%}
+            <h3>企画メンバーへの評価</h3>
+            <hr class="cp_hr03" style="margin-top: -3px;" /> {% if i.member_id != current%}
+            <h3>{{i.username}}</h3>
+            <hr class="cp_hr03" style="margin-top: -3px;" />
+            <div class="tape-box_b">
+                <div class="tape"></div>
+                <input type="hidden" id="id" name="id" value={{i.member_id}}>
+                <select class="form-select" aria-label=".form-select-lg example" name="{{i.member_id}}_number">
+                    <option selected>評価</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    </select>
+                <h3>コメント</h3>
+                <hr class="cp_hr03" style="margin-top: -3px;" />
+                <textarea class="form-control" name="{{i.member_id}}_comment" rows="5" placeholder="Comment"></textarea> {%endif%}{%endif%}{%endfor%}{%endif%}
+            </div>
+            <!------------------------------------------------------------------------------------------>
+            <nav><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal1">評価を終了する</button></nav>
+            <div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="Modal1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-center">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="Modal1">登録する</h5>
+                        </div>
+                        <div class="modal-body">
+                            <h3>評価を登録し本プロジェクトを終了します</h3>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                <button class="btn btn-round btn-d" type="submit"><i class="fa fa-paper-plane-o"></i>送信する</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

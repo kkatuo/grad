@@ -1,0 +1,79 @@
+{% extends "base.html" %} {% block content %}
+<div class="main">
+    <section class="module-small">
+        <div class="container">
+            <h1></h1>
+
+            <!--コメント欄-->
+            <div class="comment-form">
+                <h4 class="comment-form-title font-alt">コメント</h4>
+            </div>
+            {% for c in lists%}
+            <div class="box25">
+                <div class="row" style="margin-bottom: -3px;">
+                    <div class="col-sm-1">
+                        {%if not c.picture_path %}
+                        <img class="user_icon" src="static/planning_image/nc33060.png"></a>
+                        {%else%}
+                        <img class="user_icon" src="static/user_image/{{current_user.id}}/{{c.picture_path}}"></a>
+                        {%endif%}
+                    </div>
+                    <font size="5">{{c.username}}</font>&nbsp;{{c.create_at}}
+                </div>
+                <hr class="cp_hr03" style="margin-top: -3px;" /> {% if c.flag == "0"%}
+                <div style="width: 50;">
+                    <p style="padding-left: 100px; word-wrap:break-all;">{{c.comment}}</p>
+                </div>
+                {%endif%} {%if c.flag == "1"%} {% for i in c.comment.split(',')%}
+                <img class="comment_icon" src="static/plan_chat/{{id}}/{{i}}"> {%endfor%} {%endif%}
+
+            </div>
+            <p></p>
+            {% endfor %}
+            <!--コメント書き込み処理-->
+            <div class="comment-form">
+                <h4 class="comment-form-title font-alt">書き込む</h4>
+                <form method="post" action="/plan_chat_up" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="hidden" name="ID" value="{{id}}">
+                        <input type="hidden" name="Name_id" value="{{current_user.id}}">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Comment"></textarea>
+                    </div>
+                    <!--画像送付ボタン-->
+                    <input type="file" id="example" name="file" multiple accept="image/*">
+                    <div id="preview"></div>
+                    <!--書き込みボタン-->
+                    <button class="btn btn-round btn-d" type="submit">書き込む</button>
+                </form>
+                <!--プロジェクトを終了ボタン-->
+                {% if plan == current_user.id %}
+                <nav><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal1">プロジェクトを終了する</button></nav>
+                <div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="Modal1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-center">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="Modal1">メッセージを送る</h5>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form" role="form" action="/end_plan" method="POST" enctype="multipart/form-data">
+                                    <h3>一度終了すると戻すことが出来ません。</h3>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                        <input type="hidden" name="id" value={{id}}>
+                                        <button class="btn btn-round btn-d" type="submit"><i class="fa fa-paper-plane-o"></i>終了する。</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,318 @@
+{% extends "base.html" %} {% block content %}
+<div class="main">
+    <section class="module-small">
+        <div class="container-fluid">
+            <div class="row">
+                {% for i in lists %}
+                <div class="col-sm-6 col-md-offset-2">
+                    <div class="post">
+                        {% if not i.image %}
+                        <img class="plan_icon" src="static/planning_image/nc33060.png" alt="説明書き"></a>
+                        {% else %}
+                        <img class="plan_icon" src="static/planning_image/{{i.id}}/{{i.image}}" alt="説明書き"></a>
+                        {% endif %}
+                        <div class="post-header font-alt">
+                            <h1 class="post-title">{{i.title}}</h1>
+                            <div class="post-meta">By&nbsp;<a href="#">{{i.username}}</a>{{i.create_at}}
+                            </div>
+                        </div>
+                        <h4 class="comment-title font-alt">概要</h4>
+                        <div class="post-entry">
+                            <p>{{i.contents}}</p>
+                        </div>
+                    </div>
+
+                    <div class="comments">
+                        <h4 class="comment-title font-alt">募集要項</h4>
+                        <div class="comment clearfix">
+                            <p>{{i.application}}</p>
+                        </div>
+                        <div class="comment clearfix">
+                            <div class="tags font-serif">
+                                {% for f in planning_tag %}
+                                <a href="/search?tags={{f}}">{{f}}</a> {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="comment-title font-alt">メンバー</h4>
+                    <div class="box17">
+                        {% for i in lists %}
+                        <a href="#" class="btn-edge">
+                            {{i.username}}
+                          </a> {% endfor %} {% for f in menber_list %}
+                        <a href="#" class="btn-edge">
+                            {{f.username}}
+                          </a> {% endfor %}
+                    </div>
+                    <!--申請ボタン-->
+                    <p></p>
+                    {% if flag_1 > 0%}
+                    <h3>既に申請しております</h3>
+                    {% elif current_user.id != planner_id %}
+                    <nav><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal2">申請をする。</button></nav>
+                    <div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="Modal2" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Modal2">メッセージを送る</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form" role="form" action="/send_message" method="POST" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            {% for i in lists %}
+                                            <label for="recipient-name" class="col-form-label">宛先:</label>
+                                            <input type="hidden" name="ID" value="{{id}}">
+                                            <input type="hidden" name="recipient_name_id" value="{{i.planner}}">
+                                            <input type="hidden" name="sender_name_id" value="{{current_user.id}}">
+                                            <input type="text" class="form-control" name="recipient-name" value="{{i.username}}" readonly> {% endfor %}
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="message-text" class="col-form-label">メッセージ:</label>
+                                            <textarea class="form-control" name="message-text"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                            <button class="btn btn-primary btn-round" type="submit"><i class="fa fa-paper-plane-o"></i> 送信</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif current_user.id == planner_id and flag == '0'%}
+                    <nav><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal3">募集を停止する</button></nav>
+                    <!-- モーダルの設定 -->
+                    <div class="modal fade" id="Modal3" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true">
+                        <!--以下modal-dialogのCSSの部分で modal-lgやmodal-smを追加するとモーダルのサイズを変更することができる-->
+                        <div class="modal-dialog modal-lg modal-dialog-center" role="document">
+                            <div class="modal-content center-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Modal3">プロジェクトの募集を停止しますか？</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    この企画の募集を停止します。
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="button" class="btn btn-primary"><a href="/deadline?ID={{i.id}}">停止</a></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!--コメント欄-->
+                    <div class="comment-form">
+                        <h4 class="comment-form-title font-alt">コメント</h4>
+                    </div>
+                    {% for c in comment%}
+                    <div class="box25">
+                        <div class="row" style="margin-bottom: -3px;">
+                            <div class="col-sm-1">
+                                {%if not c.picture_path %}
+                                <img class="user_icon" src="static/planning_image/nc33060.png"></a>
+                                {%else%}
+                                <img class="user_icon" src="static/user_image/{{current_user.id}}/{{c.picture_path}}"></a>
+                                {%endif%}
+                            </div>
+                            <font size="5">{{c.username}}</font>&nbsp;{{c.create_at}}
+                        </div>
+                        <hr class="cp_hr03" style="margin-top: -3px;" />
+                        <font size="2" style="padding-left: 100px;">{{c.comment}}</font>
+                    </div>
+                    <p></p>
+                    {% endfor %}
+                    <!--コメント書き込み処理-->
+                    <div class="comment-form">
+                        <h4 class="comment-form-title font-alt">書き込む</h4>
+                        <form method="post" action="/comment">
+                            <div class="form-group">
+                                <input type="hidden" name="ID" value="{{id}}">
+                                <input type="hidden" name="Name_id" value="{{current_user.id}}">
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Comment"></textarea>
+                            </div>
+                            <button class="btn btn-round btn-d" type="submit">書き込む</button>
+                        </form>
+                    </div>
+                    <p></p>
+                    <!--企画者なら表示する-->
+                    {% if current_user.id == planner_id %}
+                    <!-- 切り替えボタンの設定 -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">削除</button>
+                    <a href="/update?ID={{id}}" class="btn btn-primary">更新</a>
+                    <!-- モーダルの設定 -->
+                    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true">
+                        <!--以下modal-dialogのCSSの部分で modal-lgやmodal-smを追加するとモーダルのサイズを変更することができる-->
+                        <div class="modal-dialog modal-lg modal-dialog-center" role="document">
+                            <div class="modal-content center-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="Modal">プロジェクトを削除しますか？</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    削除すると戻すことが出来ません。
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="button" class="btn btn-primary"><a href="/delete?ID={{i.id}}">削除</a></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <!--検索ボックス-->
+                <div class="col-sm-4 col-md-3 col-md-offset-1 sidebar">
+                    <div class="widget">
+                        <form role="form" action="/search" method="GET">
+                            <div class="search-box">
+                                <input class="form-control" type="text" placeholder="検索" name="tags" />
+                                <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget-title font-alt">学科カテゴリー</h5>
+                        <ul class="icon-list">
+                            <ul class="list-group-flush" style="max-width: 270px;"></ul>
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#creator">クリエイターズカレッジ</a>
+                                        </h4>
+                                    </div>
+                                    <div id="creator" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ul>
+                                                {% for i in course_cr %}
+                                                <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#design">デザインカレッジ</a>
+                                        </h4>
+                                    </div>
+                                    <div id="design" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ul>
+                                                {% for i in course_ds %}
+                                                <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#music">ミュージックカレッジ</a>
+                                        </h4>
+                                    </div>
+                                    <div id="music" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ul>
+                                                {% for i in course_mu %}
+                                                <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#it">ITカレッジ</a>
+                                        </h4>
+                                    </div>
+                                    <div id="it" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ul>
+                                                {% for i in course_it %}
+                                                <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#technology">テクノロジーカレッジ</a>
+                                        </h4>
+                                    </div>
+                                    <div id="technology" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <ul>
+                                                {% for i in course_tc %}
+                                                <li><a href="/search?tags={{i}}">{{i}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget">
+                                    <h5 class="widget-title font-alt">Popular Posts</h5>
+                                    <ul class="widget-posts">
+                                        <li class="clearfix">
+                                            <div class="widget-posts-image">
+                                                <a href="#"><img src="assets/images/rp-3.jpg" alt="Post Thumbnail" /></a>
+                                            </div>
+                                            <div class="widget-posts-body">
+                                                <div class="widget-posts-title"><a href="#">Designer Desk Essentials</a></div>
+                                                <div class="widget-posts-meta">23 january</div>
+                                            </div>
+                                        </li>
+                                        <li class="clearfix">
+                                            <div class="widget-posts-image">
+                                                <a href="#"><img src="static/assets/images/rp-4.jpg" alt="Post Thumbnail" /></a>
+                                            </div>
+                                            <div class="widget-posts-body">
+                                                <div class="widget-posts-title"><a href="#">Realistic Business Card Mockup</a></div>
+                                                <div class="widget-posts-meta">15 February</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--右下のボタン-->
+                                <div id="fixed">
+                                    <a href="{{url_for('app.forms')}}" class="btn btn-malformation">企画する</a>
+                                </div>
+                                <div class="widget">
+                                    <h5 class="widget-title font-alt">Tag</h5>
+                                    <div class="tags font-serif">
+                                        {% for i in tag %}
+                                        <a href="/search?tags={{i}}">{{i}}</a> {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="widget">
+                                    <h5 class="widget-title font-alt">Text</h5>The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators.
+                                </div>
+                                <div class="widget">
+                                    <h5 class="widget-title font-alt">Recent Comments</h5>
+                                    <ul class="icon-list">
+                                        <li>Maria on <a href="#">Designer Desk Essentials</a></li>
+                                        <li>John on <a href="#">Realistic Business Card Mockup</a></li>
+                                        <li>Andy on <a href="#">Eco bag Mockup</a></li>
+                                        <li>Jack on <a href="#">Bottle Mockup</a></li>
+                                        <li>Mark on <a href="#">Our trip to the Alps</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+    </section>
+    {% endblock %}

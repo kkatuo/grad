@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block content %}
+<section class="module">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <h4 class="font-alt mb-0">企画を更新する</h4>
+                <hr class="divider-w mt-10 mb-20"> {% for i in plan %}
+                <form class="form" role="form" action="/updated?ID={{i.id}}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input class="form-control input-lg" type="text" name="title" placeholder="企画名" value={{i.title}} />
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="5" name="contents" placeholder="概要">{{i.contents}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="4" name="application" placeholder="募集要項">{{i.application}}</textarea>
+                    </div>
+                    <!--<div class="form-group">
+                        <input type="file" name="image" accept="image/jpeg">
+                    </div>-->
+                    <div class="form-group">
+                        <textarea class="form-control" rows="7" name="taglist" placeholder="タグ 複数ある場合は「,」で区切りで入力してください。">{{i.taglist}}</textarea>
+                    </div>
+                    <button class="btn btn-primary btn-round" type="submit"><i class="fa fa-paper-plane-o"></i> 更新</button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
